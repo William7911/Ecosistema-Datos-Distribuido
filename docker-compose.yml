@@ -1,0 +1,30 @@
+version: '3.8'
+
+networks:
+  data_ecosystem:
+    driver: bridge
+
+volumes:
+  mysql_master_data:
+
+services:
+  mysql_master:
+    image: mysql:8.0
+    container_name: mysql_master
+    profiles: ["core"]
+    environment:
+      MYSQL_ROOT_PASSWORD: password_root_seguro
+      MYSQL_DATABASE: ecosistema_db
+      MYSQL_USER: admin_distribuido
+      MYSQL_PASSWORD: password_seguro
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_master_data:/var/lib/mysql
+    networks:
+      - data_ecosystem
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
