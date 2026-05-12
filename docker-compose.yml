@@ -6,12 +6,15 @@ networks:
 
 volumes:
   mysql_master_data:
+  postgres_data:
+  mongo_data:
+  sqlserver_data:
 
 services:
+  # --- NODO MAESTRO (INTEGRANTE 1) ---
   mysql_master:
     image: mysql:8.0
     container_name: mysql_master
-    profiles: ["core"]
     environment:
       MYSQL_ROOT_PASSWORD: password_root_seguro
       MYSQL_DATABASE: ecosistema_db
@@ -28,3 +31,56 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # --- TUS MOTORES (INTEGRANTE 3 / DAVID) ---
+
+  # 1. PostgreSQL - Nodo Central de Usuarios y Bitácora
+  postgres_core:
+    image: postgres:16
+    container_name: postgres_core
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: bd_principal
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - data_ecosystem
+
+  # 2. MongoDB - Auditoría Forense (NoSQL)
+  mongo_local:
+    image: mongo:latest
+    container_name: mongo_local
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - data_ecosystem
+
+  # 3. SQL Server - Ventas y Particionamiento
+  sql_local:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql_local
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "PasswordFuerte2026!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - data_ecosystem
+
+  # 4. Oracle - Gestión de Inventario
+  oracle_local:
+    image: gvenzl/oracle-free:latest
+    container_name: oracle_local
+    environment:
+      ORACLE_PASSWORD: "PasswordFuerte2026!"
+    ports:
+      - "1521:1521"
+    networks:
+      - data_ecosystem
