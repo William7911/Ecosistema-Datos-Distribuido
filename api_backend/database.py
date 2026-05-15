@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # Configuración de red (deja localhost por ahora si están probando en tu máquina)
-UBUNTU_IP = "localhost" 
+UBUNTU_IP = "127.0.0.1"
 
 # --- CONFIGURACIÓN POSTGRES (Ojo al cambio a bd_principal) ---
 URL_DATABASE = f"postgresql://admin:admin123@{UBUNTU_IP}:5432/bd_principal"
