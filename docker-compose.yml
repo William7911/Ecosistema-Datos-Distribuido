@@ -53,6 +53,9 @@ services:
   mongo_local:
     image: mongo:latest
     container_name: mongo_local
+    environment:
+      MONGO_INITDB_ROOOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWOR: admin123
     ports:
       - "27017:27017"
     volumes:
